@@ -20,12 +20,33 @@ export const featureReducer = (state=initialState, action) => {
 
   switch(action.type) {
     case ADD_FEATURE:
-      return state;
+      const falseIfUnique = state.car.features.filter(item => 
+        action.payload.id === item.id
+      )
+      return {
+        ...state,
+        car: {...state.car,
+          features: falseIfUnique[0] ?
+            state.car.features:
+            state.car.features.concat(action.payload),
+          price: falseIfUnique[0] ?
+            state.car.price:
+            state.car.price + action.payload.price
+        }
+      }
     case REMOVE_FEATURE:
-      return state;
-    case UPDATE_TOTAL:
-      return state;
+      const featuresToKeep = state.car.features.filter( feature => 
+        {return (feature.id !== action.payload.id)}
+      )
+
+    return {
+        ...state,
+        car: {...state.car, features: featuresToKeep,
+          price: state.car.price - action.payload.price
+        }
+      };
     default:
       return state;
   }
 }
+//state.filter( todo => !todo.completed)
